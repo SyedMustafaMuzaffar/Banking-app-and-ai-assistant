@@ -5,10 +5,11 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isVercel = process.env.VERCEL === '1';
-const dataDir = isVercel ? '/tmp' : path.join(__dirname, '..', 'data');
+const dataDir = isVercel ? '/tmp' : path.join(process.cwd(), 'data');
 if (!isVercel && !fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 const dbPath = path.join(dataDir, 'bank.db');
 
+console.log('Initializing DB at:', dbPath);
 const db = new DatabaseSync(dbPath);
 
 db.exec(`
