@@ -1,14 +1,18 @@
 {
     "version": 2,
-    "rewrites": [
+    "functions": {
+        "server/index.js": {
+            "runtime": "vercel-node@latest"
+        }
+    },
+    "routes": [
         {
-            "source": "/api/(.*)",
-            "destination": "/server/index.js"
+            "src": "/api/(.*)",
+            "dest": "/server/index.js"
         },
         {
-            "source": "/(.*)",
-            "destination": "/public/$1"
+            "src": "/(.*)",
+            "dest": "/public/$1"
         }
-    ],
-    "cleanUrls": true
+    ]
 }

@@ -17,7 +17,13 @@ async function api(path, options = {}) {
       ? { body: JSON.stringify(options.body) }
       : {}),
   });
-  const data = res.ok ? await res.json().catch(() => ({})) : await res.json().catch(() => ({ error: 'Request failed' }));
+  let data;
+  try {
+    data = await res.json();
+  } catch (e) {
+    const text = await res.text().catch(() => 'Request failed');
+    data = { error: text.length > 50 ? text.slice(0, 50) + '...' : text };
+  }
   if (!res.ok) throw { status: res.status, ...data };
   return data;
 }
