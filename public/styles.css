@@ -216,6 +216,13 @@ body {
 }
 
 /* Forms & Inputs */
+label {
+  display: block;
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
 input {
   width: 100%;
   padding: 0.8rem 1rem;
