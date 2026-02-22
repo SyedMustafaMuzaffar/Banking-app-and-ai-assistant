@@ -3,7 +3,11 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/index.js"
+            "destination": "/api"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/public/$1"
         }
     ],
     "cleanUrls": true
