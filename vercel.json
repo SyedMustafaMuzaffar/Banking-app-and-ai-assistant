@@ -4,10 +4,6 @@
         {
             "source": "/api/(.*)",
             "destination": "/index.js"
-        },
-        {
-            "source": "/(.*)",
-            "destination": "/public/$1"
         }
     ],
     "cleanUrls": true
