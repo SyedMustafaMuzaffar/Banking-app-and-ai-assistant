@@ -2,11 +2,11 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/api/:match*",
-            "destination": "/api/index.js"
+            "source": "/api/(.*)",
+            "destination": "/index.js"
         },
         {
-            "source": "/((?!api/).*)",
+            "source": "/(.*)",
             "destination": "/public/$1"
         }
     ],

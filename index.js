@@ -6,13 +6,13 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import db from '../server/db.js';
+import db from './server/db.js';
 import {
   generateToken,
   storeToken,
   authMiddleware,
   COOKIE_NAME,
-} from '../server/auth.js';
+} from './server/auth.js';
 import bcrypt from 'bcryptjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
