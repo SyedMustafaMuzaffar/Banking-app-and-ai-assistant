@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bank Simulation</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/chat.css" />
+</head>
+
+<body>
+  <div id="app">
+    <!-- Landing: Login / Register -->
+    <div id="landing" class="screen">
+      <header class="header">
+        <h1>Bank Simulation</h1>
+      </header>
+      <main class="main">
+        <div id="auth-tabs">
+          <button type="button" class="tab active" data-tab="login">Log in</button>
+          <button type="button" class="tab" data-tab="register">Register</button>
+        </div>
+
+        <form id="login-form" class="auth-form">
+          <h2>Log in</h2>
+          <label>Email <input type="email" name="email" required /></label>
+          <label>Password <input type="password" name="password" required /></label>
+          <p id="login-error" class="error"></p>
+          <button type="submit">Log in</button>
+        </form>
+
+        <form id="register-form" class="auth-form hidden">
+          <h2>Register</h2>
+          <label>Full name <input type="text" name="fullName" required /></label>
+          <label>Email <input type="email" name="email" required /></label>
+          <label>Password <input type="password" name="password" required minlength="6" /></label>
+          <p id="register-error" class="error"></p>
+          <button type="submit">Register</button>
+        </form>
+      </main>
+    </div>
+
+    <!-- Dashboard: after login -->
+    <div id="dashboard" class="screen hidden">
+      <header class="header">
+        <h1>Bank Simulation</h1>
+        <p id="user-info"></p>
+        <button type="button" id="logout-btn" class="btn-secondary">Log out</button>
+      </header>
+      <main class="main">
+        <nav class="nav">
+          <button type="button" class="nav-btn active" data-page="balance">Check Balance</button>
+          <button type="button" class="nav-btn" data-page="deposit">Deposit</button>
+          <button type="button" class="nav-btn" data-page="withdraw">Withdraw</button>
+          <button type="button" class="nav-btn" data-page="send">Send Money</button>
+          <button type="button" class="nav-btn" data-page="transactions">History</button>
+        </nav>
+
+        <section id="page-balance" class="page">
+          <h2>Check Balance</h2>
+          <button type="button" id="fetch-balance-btn">Check my balance</button>
+          <p id="balance-result" class="result"></p>
+        </section>
+
+        <section id="page-deposit" class="page hidden">
+          <h2>Deposit Money</h2>
+          <form id="deposit-form">
+            <label>Amount <input type="number" name="amount" step="0.01" min="0.01" required /></label>
+            <p id="deposit-error" class="error"></p>
+            <button type="submit">Deposit</button>
+          </form>
+          <p id="deposit-result" class="result"></p>
+        </section>
+
+        <section id="page-withdraw" class="page hidden">
+          <h2>Withdraw Money</h2>
+          <form id="withdraw-form">
+            <label>Amount <input type="number" name="amount" step="0.01" min="0.01" required /></label>
+            <p id="withdraw-error" class="error"></p>
+            <button type="submit">Withdraw</button>
+          </form>
+          <p id="withdraw-result" class="result"></p>
+        </section>
+
+        <section id="page-send" class="page hidden">
+          <h2>Send Money</h2>
+          <form id="send-money-form">
+            <label>Recipient email <input type="email" name="toEmail" required /></label>
+            <label>Amount <input type="number" name="amount" step="0.01" min="0.01" required /></label>
+            <p id="send-error" class="error"></p>
+            <button type="submit">Send</button>
+          </form>
+          <p id="send-result" class="result"></p>
+        </section>
+
+        <section id="page-transactions" class="page hidden">
+          <h2>Transaction History</h2>
+          <button type="button" id="refresh-transactions-btn" class="btn-small">Refresh</button>
+          <div class="table-container">
+            <table id="transactions-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Details</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Row template -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+  <script src="/chat.js"></script>
+</body>
+
+</html>

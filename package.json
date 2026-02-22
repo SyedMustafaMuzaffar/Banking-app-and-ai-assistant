@@ -1,0 +1,18 @@
+{
+  "name": "bank-simulation",
+  "version": "1.0.0",
+  "description": "Small banking simulation app with JWT auth",
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
