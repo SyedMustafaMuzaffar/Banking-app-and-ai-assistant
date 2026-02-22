@@ -11,12 +11,12 @@
             </button>
             <div class="chat-window" id="chat-window">
                 <div class="chat-header">
-                    <h3>BankBuddy AI</h3>
+                    <h3>Indian Bank AI</h3>
                     <button class="close-chat" id="close-chat">&times;</button>
                 </div>
                 <div class="chat-messages" id="chat-messages">
                     <div class="message ai">
-                        Hi! I'm BankBuddy. How can I help you with your banking today?
+                        Hi! I'm Indian Bank AI. How can I help you with your banking today?
                     </div>
                 </div>
                 <div class="chat-input-area">
@@ -34,12 +34,12 @@
     document.body.insertAdjacentHTML('beforeend', chatHTML);
 
     const container = document.querySelector('.chat-widget-container');
-    container.style.display = 'none'; // Hide by default
+    if (container) container.style.display = 'none';
 
     // Expose global functions for app.js to control
-    window.BankBuddy = {
-        show: () => container.style.display = 'block',
-        hide: () => container.style.display = 'none'
+    window.IndianBankAI = {
+        show: () => { if (container) container.style.display = 'block'; },
+        hide: () => { if (container) container.style.display = 'none'; }
     };
 
     const toggleBtn = document.getElementById('chat-toggle-btn');
@@ -52,62 +52,77 @@
     let isThinking = false;
 
     // Toggle window
-    toggleBtn.addEventListener('click', () => {
-        chatWindow.classList.toggle('open');
-        if (chatWindow.classList.contains('open')) {
-            chatInput.focus();
-        }
-    });
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            chatWindow.classList.toggle('open');
+            if (chatWindow.classList.contains('open')) {
+                chatInput.focus();
+            }
+        });
+    }
 
-    closeBtn.addEventListener('click', () => {
-        chatWindow.classList.remove('open');
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            chatWindow.classList.remove('open');
+        });
+    }
 
     // Send message function
     async function sendMessage() {
         const text = chatInput.value.trim();
         if (!text || isThinking) return;
 
-        // Add user message
-        addMessage(text, 'user');
-        chatInput.value = '';
-
-        // Add thinking indicator
-        isThinking = true;
-        const thinkingId = addThinkingIndicator();
-
         try {
+            // Add user message
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            // Add thinking indicator
+            isThinking = true;
+            const thinkingId = addThinkingIndicator();
+
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     messages: [
-                        { role: 'system', content: 'You are BankBuddy, a friendly and extremely knowledgeable AI assistant. While you are part of a banking app, you can answer ANY general questions the user has (e.g., about cities, history, science, etc.). Be professional, helpful, and concise.' },
+                        { role: 'system', content: 'You are Indian Bank AI, a friendly and extremely knowledgeable AI assistant. While you are part of a banking app, you can answer ANY general questions the user has. Be professional, helpful, and concise.' },
                         { role: 'user', content: text }
                     ]
                 })
             });
 
-            const data = await response.json();
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                const errorText = await response.text().catch(() => 'Connection failed');
+                data = { error: errorText };
+            }
+
             removeThinkingIndicator(thinkingId);
             isThinking = false;
 
             if (data.choices && data.choices[0] && data.choices[0].message) {
                 addMessage(data.choices[0].message.content, 'ai');
             } else if (data.error) {
-                addMessage(`Error: ${data.error}`, 'ai');
+                const msg = typeof data.error === 'string' ? data.error : (data.error.message || 'Error occurred');
+                addMessage(`Error: ${msg}`, 'ai');
             } else {
-                addMessage("I'm sorry, I'm having trouble connecting to my brain right now.", 'ai');
+                addMessage("I'm sorry, I encountered an unexpected error.", 'ai');
             }
         } catch (error) {
             console.error('Chat error:', error);
-            removeThinkingIndicator(thinkingId);
             isThinking = false;
-            addMessage("Oops! Something went wrong. Please try again later.", 'ai');
+            // Remove indicator if it exists
+            const indicators = chatMessages.querySelectorAll('.typing-indicator');
+            indicators.forEach(i => i.remove());
+            addMessage("Oops! Something went wrong. Please check your connection.", 'ai');
         }
     }
 
     function addMessage(text, role) {
+        if (!chatMessages) return;
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${role}`;
         msgDiv.textContent = text;
@@ -132,9 +147,11 @@
     }
 
     // Event listeners for sending
-    sendBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
+    if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+    if (chatInput) {
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    }
 
 })();

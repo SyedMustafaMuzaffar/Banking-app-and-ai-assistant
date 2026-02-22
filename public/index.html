@@ -2,122 +2,186 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bank Simulation</title>
-  <link rel="stylesheet" href="/styles.css" />
-  <link rel="stylesheet" href="/chat.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Bank | Premium Finance</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="chat.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
+  <div id="toast-container"></div>
+
   <div id="app">
-    <!-- Landing: Login / Register -->
+    <!-- Screen: Landing (Login/Register) -->
     <div id="landing" class="screen">
-      <header class="header">
-        <h1>Bank Simulation</h1>
+      <h1>Indian Bank</h1>
+      <p>Future-ready banking for the modern age.</p>
       </header>
-      <main class="main">
+
+      <div class="main glass-panel">
         <div id="auth-tabs">
-          <button type="button" class="tab active" data-tab="login">Log in</button>
-          <button type="button" class="tab" data-tab="register">Register</button>
+          <button class="tab active" data-tab="login">Log in</button>
+          <button class="tab" data-tab="register">Register</button>
         </div>
 
         <form id="login-form" class="auth-form">
-          <h2>Log in</h2>
-          <label>Email <input type="email" name="email" required /></label>
-          <label>Password <input type="password" name="password" required /></label>
-          <p id="login-error" class="error"></p>
-          <button type="submit">Log in</button>
+          <label>Email
+            <input type="email" name="email" required placeholder="name@example.com">
+          </label>
+          <label>Password
+            <input type="password" name="password" required placeholder="••••••••">
+          </label>
+          <div id="login-error" class="error"></div>
+          <button type="submit" class="primary">Enter Vault</button>
         </form>
 
         <form id="register-form" class="auth-form hidden">
-          <h2>Register</h2>
-          <label>Full name <input type="text" name="fullName" required /></label>
-          <label>Email <input type="email" name="email" required /></label>
-          <label>Password <input type="password" name="password" required minlength="6" /></label>
-          <p id="register-error" class="error"></p>
-          <button type="submit">Register</button>
+          <label>Full Name
+            <input type="text" name="fullName" required placeholder="John Doe">
+          </label>
+          <label>Email
+            <input type="email" name="email" required placeholder="name@example.com">
+          </label>
+          <label>Password
+            <input type="password" name="password" required placeholder="••••••••">
+          </label>
+          <div id="register-error" class="error"></div>
+          <button type="submit" class="primary">Create Account</button>
         </form>
-      </main>
+      </div>
     </div>
 
-    <!-- Dashboard: after login -->
+    <!-- Screen: Dashboard -->
     <div id="dashboard" class="screen hidden">
       <header class="header">
-        <h1>Bank Simulation</h1>
-        <p id="user-info"></p>
-        <button type="button" id="logout-btn" class="btn-secondary">Log out</button>
+        <h1>Indian Bank</h1>
+        <p id="user-info" class="txt-muted">Loading user...</p>
+        <button id="logout-btn" class="btn-secondary" style="margin-top: 1rem;">Sign Out</button>
       </header>
-      <main class="main">
-        <nav class="nav">
-          <button type="button" class="nav-btn active" data-page="balance">Check Balance</button>
-          <button type="button" class="nav-btn" data-page="deposit">Deposit</button>
-          <button type="button" class="nav-btn" data-page="withdraw">Withdraw</button>
-          <button type="button" class="nav-btn" data-page="send">Send Money</button>
-          <button type="button" class="nav-btn" data-page="transactions">History</button>
-        </nav>
 
-        <section id="page-balance" class="page">
-          <h2>Check Balance</h2>
-          <button type="button" id="fetch-balance-btn">Check my balance</button>
-          <p id="balance-result" class="result"></p>
-        </section>
+      <div class="dashboard-grid">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel" style="padding: 1.5rem;">
+          <button class="nav-btn active" data-page="overview">Overview</button>
+          <button class="nav-btn" data-page="transactions">Transactions</button>
+          <button class="nav-btn" data-page="send">Send Money</button>
+          <button class="nav-btn" data-page="operations">Operations</button>
+          <button class="nav-btn" data-page="settings">Settings</button>
+        </aside>
 
-        <section id="page-deposit" class="page hidden">
-          <h2>Deposit Money</h2>
-          <form id="deposit-form">
-            <label>Amount <input type="number" name="amount" step="0.01" min="0.01" required /></label>
-            <p id="deposit-error" class="error"></p>
-            <button type="submit">Deposit</button>
-          </form>
-          <p id="deposit-result" class="result"></p>
-        </section>
+        <!-- Main Content Area -->
+        <main class="content-area">
+          <!-- Page: Overview -->
+          <div id="page-overview" class="page">
+            <div class="stats-container">
+              <div class="stat-card glass-panel">
+                <span class="stat-label">Total Balance</span>
+                <span id="overview-balance" class="stat-value">$0.00</span>
+              </div>
+              <div class="stat-card glass-panel">
+                <span class="stat-label">Cash In (Monthly)</span>
+                <span id="stat-income" class="stat-value txt-success">$0.00</span>
+              </div>
+              <div class="stat-card glass-panel">
+                <span class="stat-label">Cash Out (Monthly)</span>
+                <span id="stat-expense" class="stat-value txt-error">$0.00</span>
+              </div>
+            </div>
 
-        <section id="page-withdraw" class="page hidden">
-          <h2>Withdraw Money</h2>
-          <form id="withdraw-form">
-            <label>Amount <input type="number" name="amount" step="0.01" min="0.01" required /></label>
-            <p id="withdraw-error" class="error"></p>
-            <button type="submit">Withdraw</button>
-          </form>
-          <p id="withdraw-result" class="result"></p>
-        </section>
-
-        <section id="page-send" class="page hidden">
-          <h2>Send Money</h2>
-          <form id="send-money-form">
-            <label>Recipient email <input type="email" name="toEmail" required /></label>
-            <label>Amount <input type="number" name="amount" step="0.01" min="0.01" required /></label>
-            <p id="send-error" class="error"></p>
-            <button type="submit">Send</button>
-          </form>
-          <p id="send-result" class="result"></p>
-        </section>
-
-        <section id="page-transactions" class="page hidden">
-          <h2>Transaction History</h2>
-          <button type="button" id="refresh-transactions-btn" class="btn-small">Refresh</button>
-          <div class="table-container">
-            <table id="transactions-table">
-              <thead>
-                <tr>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Details</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Row template -->
-              </tbody>
-            </table>
+            <div class="chart-card glass-panel">
+              <h2 style="margin-top:0">Spending Activity</h2>
+              <canvas id="spending-chart"></canvas>
+            </div>
           </div>
-        </section>
-      </main>
+
+          <!-- Page: Transactions -->
+          <div id="page-transactions" class="page hidden">
+            <div class="glass-panel" style="padding: 1.5rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2 style="margin:0">Transaction History</h2>
+                <button id="refresh-transactions-btn" class="btn-secondary btn-small">Refresh</button>
+              </div>
+              <div class="table-container">
+                <table id="transactions-table">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Amount</th>
+                      <th>Party</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Page: Send Money -->
+          <div id="page-send" class="page hidden">
+            <div class="glass-panel" style="padding: 2rem; max-width:500px">
+              <h2>Send Money</h2>
+              <form id="send-money-form">
+                <label>Recipient Email
+                  <input type="email" name="toEmail" required placeholder="recipient@example.com">
+                </label>
+                <label>Amount
+                  <input type="number" name="amount" step="0.01" min="0.01" required placeholder="0.00">
+                </label>
+                <div id="send-error" class="error"></div>
+                <div id="send-result" class="result"></div>
+                <button type="submit" class="primary">Confirm Transfer</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Page: Operations -->
+          <div id="page-operations" class="page hidden">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+              <div class="glass-panel" style="padding: 1.5rem;">
+                <h2>Deposit</h2>
+                <form id="deposit-form">
+                  <input type="number" name="amount" step="0.01" min="1" required placeholder="Amount">
+                  <div id="deposit-error" class="error"></div>
+                  <div id="deposit-result" class="result"></div>
+                  <button type="submit" class="primary">Deposit Fund</button>
+                </form>
+              </div>
+              <div class="glass-panel" style="padding: 1.5rem;">
+                <h2>Withdraw</h2>
+                <form id="withdraw-form">
+                  <input type="number" name="amount" step="0.01" min="1" required placeholder="Amount">
+                  <div id="withdraw-error" class="error"></div>
+                  <div id="withdraw-result" class="result"></div>
+                  <button type="submit" class="primary">Withdraw Fund</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Page: Settings -->
+          <div id="page-settings" class="page hidden">
+            <div class="glass-panel" style="padding: 2rem; max-width:500px">
+              <h2>Account Settings</h2>
+              <form id="profile-form">
+                <label>Full Name
+                  <input type="text" name="fullName" id="settings-fullname" required>
+                </label>
+                <div id="settings-error" class="error"></div>
+                <button type="submit" class="primary">Update Profile</button>
+              </form>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   </div>
-  <script src="/app.js"></script>
-  <script src="/chat.js"></script>
+
+  <script src="app.js"></script>
+  <script src="chat.js"></script>
 </body>
 
 </html>

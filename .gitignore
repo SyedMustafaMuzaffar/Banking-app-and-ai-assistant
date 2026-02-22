@@ -1,4 +1,14 @@
+# Professional .gitignore
 node_modules/
 data/
 .env
 *.log
+*.sqlite
+*.db-journal
+*.db-shm
+*.db-wal
+.DS_Store
+dist/
+build/
+.vercel
+/tmp

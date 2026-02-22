@@ -25,7 +25,7 @@ app.use(cors({
 }));
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.static(path.join(process.cwd(), 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // --- Registration ---
 app.post('/api/register', (req, res) => {
@@ -221,6 +221,7 @@ app.post('/api/chat', async (req, res) => {
 
     if (!response.ok) {
       const text = await response.text();
+      console.error('Hugging Face API Error:', text);
       let errorData;
       try {
         errorData = JSON.parse(text);
@@ -233,7 +234,7 @@ app.post('/api/chat', async (req, res) => {
     const data = await response.json();
     res.json(data);
   } catch (error) {
-    console.error('AI Proxy Error:', error);
+    console.error('AI Proxy Exception:', error);
     res.status(500).json({ error: 'Failed to connect to AI service' });
   }
 });
@@ -247,6 +248,47 @@ app.get('/api/me', authMiddleware, (req, res) => {
     email: user.email,
     fullName: user.full_name,
   });
+});
+
+// --- Update Profile ---
+app.post('/api/profile/update', authMiddleware, (req, res) => {
+  const { fullName } = req.body;
+  if (!fullName) {
+    return res.status(400).json({ error: 'Full name is required' });
+  }
+
+  try {
+    const stmt = db.prepare('UPDATE users SET full_name = ? WHERE id = ?');
+    stmt.run(fullName.trim(), req.userId);
+    res.json({ message: 'Profile updated successfully', fullName: fullName.trim() });
+  } catch (e) {
+    console.error('Update Profile Error:', e);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// --- Financial Statistics ---
+app.get('/api/stats', authMiddleware, (req, res) => {
+  try {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+    const stats = db.prepare(`
+      SELECT 
+        SUM(CASE WHEN type IN ('deposit', 'received') THEN amount ELSE 0 END) as income,
+        SUM(CASE WHEN type IN ('withdraw', 'sent') THEN amount ELSE 0 END) as expense
+      FROM transactions 
+      WHERE user_id = ? AND created_at >= ?
+    `).get(req.userId, startOfMonth);
+
+    res.json({
+      income: stats.income || 0,
+      expense: stats.expense || 0,
+    });
+  } catch (e) {
+    console.error('Stats Error:', e);
+    res.status(500).json({ error: 'Failed to fetch statistics' });
+  }
 });
 
 function startServer(port) {

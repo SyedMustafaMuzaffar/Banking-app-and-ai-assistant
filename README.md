@@ -1,11 +1,11 @@
-# Bank Simulation & AI Assistant
+# Indian Bank | Modern Finance & AI
 
-A modern banking simulation with a built-in **BankBuddy AI assistant**, styled with **glassmorphism**, and optimized for **Vercel deployment**.
+A premium banking simulation with a built-in **Indian Bank AI assistant**, styled with **glassmorphism**, and optimized for **Vercel deployment**.
 
 ## Features
 
 - **Core Banking**: Register, Login, JWT Authentication, Balance Check, and P2P Money Transfers.
-- **BankBuddy AI**: A smart, floating chat assistant powered by Meta Llama 3.2.
+- **Indian Bank AI**: A smart, floating chat assistant powered by Meta Llama 3.2.
 - **Glassmorphism UI**: Premium design aesthetics with blur effects and smooth animations.
 - **Deployment Ready**: Fully compatible with Vercel Serverless Functions.
 
